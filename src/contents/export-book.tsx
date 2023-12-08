@@ -86,6 +86,7 @@ const PromptHelper = () => {
       <StyleProvider container={document.getElementById(HOST_ID).shadowRoot}>
         <div>
           <Draggable
+            handle="button"
             bounds={bounds}
             nodeRef={draggleRef}
             defaultPosition={{ x: 0, y: 0 }}

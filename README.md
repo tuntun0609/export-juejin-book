@@ -1,12 +1,10 @@
-<<<<<<< HEAD
-
 # export-juejin-book
 
-This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
+## 使用
 
-## Getting Started
+安装好插件后，打开小册页面，在右上角会出现一个可拖拽按钮，点击后有弹出层弹出，在其中可以导出对应章节的md格式文件，保存在本地
 
-First, run the development server:
+## 开发
 
 ```bash
 pnpm dev
@@ -14,32 +12,4 @@ pnpm dev
 npm run dev
 ```
 
-Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
-
-You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add an options page, simply add a `options.tsx` file to the root of the project, with a react component default exported. Likewise to add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
-
-For further guidance, [visit our Documentation](https://docs.plasmo.com/)
-
-## Making production build
-
-Run the following:
-
-```bash
-pnpm build
-# or
-npm run build
-```
-
-This should create a production bundle for your extension, ready to be zipped and published to the stores.
-
-## Submit to the webstores
-
-The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action however, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/framework/workflows/submit) and you should be on your way for automated submission!
-
->>>>>>> 75e0eed (Created a new Plasmo extension)
->>>>>>>
->>>>>>
->>>>>
->>>>
->>>
->>
+在浏览器插件管理页导入 `build/chrome-mv3-dev`.
