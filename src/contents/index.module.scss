@@ -1,0 +1,19 @@
+.showBtn {
+  position: fixed;
+  right: 20px;
+  top: 60px;
+}
+
+.listContainer {
+  width: 100%;
+}
+
+.listItem {
+  width: 100%;
+}
+
+.popoverContainer {
+  :global(.ant-popover-title) {
+    margin: 0;
+  }
+}
