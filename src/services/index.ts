@@ -10,11 +10,14 @@ export const getBookletSections = async (bookId: string) => {
     credentials: 'include'
   })
   const { data } = await response.json()
-  return data.sections.map((item) => ({
-    sectionId: item.section_id,
-    status: item.status,
-    title: item.title
-  }))
+  return {
+    title: data.booklet.base_info.title,
+    sections: data.sections.map((item) => ({
+      sectionId: item.section_id,
+      status: item.status,
+      title: item.title
+    }))
+  }
 }
 
 export const getSection = async (sectionId: string) => {

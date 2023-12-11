@@ -9,8 +9,10 @@ import Draggable, {
   type DraggableData,
   type DraggableEvent
 } from 'react-draggable'
+import { useImmer } from 'use-immer'
 
 import { PopoverContent } from '~components/popover-content'
+import { uiContext, type UiConfig } from '~components/ui-context'
 import { HOST_ID } from '~constants'
 
 import * as styles from './index.module.scss'
@@ -38,6 +40,9 @@ const PromptHelper = () => {
   })
   const draggleRef = useRef<HTMLDivElement>(null)
   const curOpenState = useRef(false)
+  const [uiConfig, setUiConfig] = useImmer<UiConfig>({
+    isBatchExportModalOpen: false
+  })
 
   const hide = () => {
     setOpen(false)
@@ -84,39 +89,50 @@ const PromptHelper = () => {
   return (
     <ConfigProvider locale={zhCN}>
       <StyleProvider container={document.getElementById(HOST_ID).shadowRoot}>
-        <div>
-          <Draggable
-            handle="button"
-            bounds={bounds}
-            nodeRef={draggleRef}
-            defaultPosition={{ x: 0, y: 0 }}
-            onStart={(event, uiData) => onStart(event, uiData)}
-            onDrag={onDrag}
-            onStop={onStop}>
-            <div className={styles.showBtn} ref={draggleRef}>
-              <Popover
-                placement="leftTop"
-                content={<PopoverContent />}
-                title={<div></div>}
-                trigger="click"
-                open={open}
-                onOpenChange={() => {
-                  if (!isDragging.current) {
-                    handleOpenChange(!open)
-                  }
-                }}
-                getPopupContainer={() =>
-                  document
-                    .getElementById(HOST_ID)
-                    .shadowRoot.querySelector('#popoverContainer')
-                }>
-                <div id="popoverContainer" className={styles.popoverContainer}>
-                  <Button>小册助手</Button>
-                </div>
-              </Popover>
-            </div>
-          </Draggable>
-        </div>
+        <uiContext.Provider
+          value={{
+            uiConfig,
+            setUiConfig
+          }}>
+          <div>
+            <Draggable
+              handle="button"
+              bounds={bounds}
+              nodeRef={draggleRef}
+              defaultPosition={{ x: 0, y: 0 }}
+              onStart={(event, uiData) => onStart(event, uiData)}
+              onDrag={onDrag}
+              onStop={onStop}>
+              <div className={styles.showBtn} ref={draggleRef}>
+                <Popover
+                  placement="leftTop"
+                  content={<PopoverContent />}
+                  title={<div></div>}
+                  trigger="click"
+                  open={open}
+                  onOpenChange={() => {
+                    if (
+                      !isDragging.current &&
+                      !uiConfig.isBatchExportModalOpen
+                    ) {
+                      handleOpenChange(!open)
+                    }
+                  }}
+                  getPopupContainer={() =>
+                    document
+                      .getElementById(HOST_ID)
+                      .shadowRoot.querySelector('#popoverContainer')
+                  }>
+                  <div
+                    id="popoverContainer"
+                    className={styles.popoverContainer}>
+                    <Button>小册助手</Button>
+                  </div>
+                </Popover>
+              </div>
+            </Draggable>
+          </div>
+        </uiContext.Provider>
       </StyleProvider>
     </ConfigProvider>
   )

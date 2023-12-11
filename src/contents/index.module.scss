@@ -20,6 +20,17 @@
 
 .popoverContent {
   width: 350px;
-  height: 400px;
+  // height: 440px;
+}
+
+.listContainer {
   overflow: auto;
+  height: 400px;
+}
+
+.toolsContainer {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
 }
