@@ -1,5 +1,5 @@
 import { List, message, Tooltip, Typography } from 'antd'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { HOST_ID } from '~constants'
 import { getBookletSections, getSection } from '~services'
@@ -14,7 +14,7 @@ import { Tools } from './tools'
 export const PopoverContent = () => {
   const { bookId } = useBook()
   const [bookSections, setBookSections] = useState<BookSectionsItem[]>([])
-  const [title, setTitle] = useState('')
+  const [bookTitle, setBookTitle] = useState('')
 
   const exportSections = (data: BookSectionsItem) => {
     getSection(data.sectionId)
@@ -30,7 +30,7 @@ export const PopoverContent = () => {
     getBookletSections(bookId)
       .then((res) => {
         setBookSections(res.sections)
-        setTitle(res.title)
+        setBookTitle(res.title)
       })
       .catch(() => {
         message.error('获取章节列表失败')
@@ -39,7 +39,7 @@ export const PopoverContent = () => {
 
   return (
     <div className={styles.popoverContent}>
-      <Tools className={styles.toolsContainer} />
+      <Tools bookSections={bookSections} className={styles.toolsContainer} />
       <List
         className={styles.listContainer}
         bordered
@@ -72,7 +72,7 @@ export const PopoverContent = () => {
           )
         }}
       />
-      <BatchExportModal bookSections={bookSections} bookTitle={title} />
+      <BatchExportModal bookSections={bookSections} bookTitle={bookTitle} />
     </div>
   )
 }

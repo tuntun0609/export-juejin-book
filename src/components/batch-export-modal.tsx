@@ -1,8 +1,10 @@
-import { Modal, Table } from 'antd'
+import { Checkbox, Modal, Table, Tooltip } from 'antd'
+import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import type { ColumnsType } from 'antd/es/table'
+import type { TableRowSelection } from 'antd/es/table/interface'
 import FileSaver from 'file-saver'
 import JSZip from 'jszip'
-import { useContext, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 
 import { HOST_ID } from '~constants'
 import { getSection } from '~services'
@@ -21,6 +23,11 @@ export const BatchExportModal = (props: Props) => {
   const { uiConfig, setUiConfig } = useContext(uiContext)
   const [loading, setLoading] = useState(false)
   const [finishSectionsNum, setFinishSectionsNum] = useState(0)
+  const canExportBookSections = useMemo(
+    () =>
+      bookSections.filter((item) => item.status === BookSectionStatus.Started),
+    [bookSections]
+  )
 
   const onCancel = () => {
     setUiConfig((draft) => {
@@ -39,7 +46,7 @@ export const BatchExportModal = (props: Props) => {
       const item = selectedSections[index]
       const res = await getSection(item.sectionId)
       setFinishSectionsNum(() => index + 1)
-      zip.file(`${item.title}.md`, res.markdown_show)
+      zip.file(`${index + 1}.${item.title}.md`, res.markdown_show)
     }
 
     zip.generateAsync({ type: 'blob' }).then((content) => {
@@ -59,7 +66,22 @@ export const BatchExportModal = (props: Props) => {
     }
   ]
 
-  const rowSelection = {
+  const onCheckAllChange = (e: CheckboxChangeEvent) => {
+    const checked = e.target.checked
+    if (checked) {
+      setSelectedRowKeys(canExportBookSections.map((item) => item.sectionId))
+    } else {
+      setSelectedRowKeys([])
+    }
+  }
+
+  const indeterminate =
+    selectedRowKeys.length > 0 &&
+    selectedRowKeys.length < canExportBookSections.length
+
+  const checkAll = canExportBookSections.length === selectedRowKeys.length
+
+  const rowSelection: TableRowSelection<BookSectionsItem> = {
     onSelect: (record: BookSectionsItem, selected: boolean) => {
       if (selected) {
         setSelectedRowKeys([...selectedRowKeys, record.sectionId])
@@ -72,17 +94,22 @@ export const BatchExportModal = (props: Props) => {
     getCheckboxProps: (record: BookSectionsItem) => ({
       disabled: record.status !== BookSectionStatus.Started
     }),
-    onSelectAll: (selected: boolean) => {
-      if (selected) {
-        setSelectedRowKeys(
-          bookSections
-            .filter((item) => item.status === BookSectionStatus.Started)
-            .map((item) => item.sectionId)
-        )
-      } else {
-        setSelectedRowKeys([])
-      }
-    }
+    columnTitle: (
+      <Tooltip
+        getPopupContainer={() =>
+          document
+            .getElementById(HOST_ID)
+            .shadowRoot.querySelector('#plasmo-overlay-0')
+        }
+        title="全选">
+        <Checkbox
+          disabled={canExportBookSections.length === 0}
+          indeterminate={indeterminate}
+          checked={checkAll}
+          onChange={onCheckAllChange}
+        />
+      </Tooltip>
+    )
   }
 
   return (
