@@ -29,7 +29,7 @@ export const getStyle = () => {
   return style
 }
 
-const PromptHelper = () => {
+const ExportBookCSUI = () => {
   const isDragging = useRef(false)
   const [open, setOpen] = useState(false)
   const [bounds, setBounds] = useState({
@@ -138,4 +138,4 @@ const PromptHelper = () => {
   )
 }
 
-export default PromptHelper
+export default ExportBookCSUI
