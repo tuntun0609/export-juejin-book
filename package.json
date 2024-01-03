@@ -1,7 +1,7 @@
 {
   "name": "export-juejin-book",
   "displayName": "Export juejin book",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "export juejin book",
   "author": "https://github.com/tuntun0609",
   "scripts": {
@@ -10,8 +10,10 @@
     "package": "plasmo package"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "^1.18.1",
-    "antd": "^5.12.1",
+    "@ant-design/cssinjs": "^1.18.2",
+    "@ant-design/icons": "^5.2.6",
+    "@plasmohq/storage": "^1.9.0",
+    "antd": "^5.12.7",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "immer": "^10.0.3",

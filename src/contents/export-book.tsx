@@ -96,7 +96,7 @@ const ExportBookCSUI = () => {
           }}>
           <div>
             <Draggable
-              handle="button"
+              handle=".handle"
               bounds={bounds}
               nodeRef={draggleRef}
               defaultPosition={{ x: 0, y: 0 }}
@@ -105,6 +105,7 @@ const ExportBookCSUI = () => {
               onStop={onStop}>
               <div className={styles.showBtn} ref={draggleRef}>
                 <Popover
+                  forceRender
                   placement="leftTop"
                   content={<PopoverContent />}
                   title={<div></div>}
@@ -126,7 +127,7 @@ const ExportBookCSUI = () => {
                   <div
                     id="popoverContainer"
                     className={styles.popoverContainer}>
-                    <Button>小册助手</Button>
+                    <Button className="handle">小册助手</Button>
                   </div>
                 </Popover>
               </div>

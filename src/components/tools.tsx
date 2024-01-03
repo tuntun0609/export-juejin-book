@@ -1,11 +1,15 @@
-import { Button, message, Space } from 'antd'
+import { Button, message, Space, Switch } from 'antd'
 import html2canvas from 'html2canvas'
-import { useContext, useMemo } from 'react'
+import { useContext, useEffect, useMemo } from 'react'
+
+import { Storage } from '@plasmohq/storage'
+import { useStorage } from '@plasmohq/storage/hook'
 
 import { HOST_ID } from '~constants'
 import type { BookSectionsItem } from '~types'
 import { useBook } from '~utils/useBook'
 
+import { MoonIcon, SunIcon } from './icon'
 import { uiContext } from './ui-context'
 
 interface Props {
@@ -24,6 +28,15 @@ export const Tools = ({ className = '', bookSections }: Props) => {
         .getElementById(HOST_ID)
         .shadowRoot.querySelector('#plasmo-shadow-container')
   })
+  const [theme, setTheme] = useStorage(
+    {
+      key: 'theme',
+      instance: new Storage({
+        area: 'local'
+      })
+    },
+    'light'
+  )
 
   const sectionTitle = useMemo(() => {
     return bookSections?.find((item) => item.sectionId === sectionId)?.title
@@ -36,7 +49,6 @@ export const Tools = ({ className = '', bookSections }: Props) => {
   }
 
   const exportPdf = () => {
-    console.log(111)
     messageApi.loading({
       key: exportPdfMessageKey,
       content: '正在导出...',
@@ -75,11 +87,27 @@ export const Tools = ({ className = '', bookSections }: Props) => {
     }, 500)
   }
 
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme)
+  }, [theme])
+
   return (
-    <Space className={className}>
-      {contextHolder}
-      <Button onClick={onBatchExport}>批量导出</Button>
-      <Button onClick={exportPdf}>导出本章png</Button>
-    </Space>
+    <div className={className}>
+      <Space>
+        {contextHolder}
+        <Button onClick={onBatchExport}>批量导出</Button>
+        {sectionId && <Button onClick={exportPdf}>导出本章png</Button>}
+      </Space>
+      <Space>
+        <Switch
+          checkedChildren={<SunIcon />}
+          unCheckedChildren={<MoonIcon />}
+          value={theme === 'light'}
+          onChange={(checked) => {
+            setTheme(checked ? 'light' : 'dark')
+          }}
+        />
+      </Space>
+    </div>
   )
 }
