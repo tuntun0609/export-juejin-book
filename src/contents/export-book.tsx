@@ -1,5 +1,5 @@
 import { StyleProvider } from '@ant-design/cssinjs'
-import { Button, ConfigProvider, Popover } from 'antd'
+import { theme as antdTheme, Button, ConfigProvider, Popover } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN'
 import styleText from 'data-text:./index.module.scss'
 import antdResetCssText from 'data-text:antd/dist/reset.css'
@@ -10,6 +10,9 @@ import Draggable, {
   type DraggableEvent
 } from 'react-draggable'
 import { useImmer } from 'use-immer'
+
+import { Storage } from '@plasmohq/storage'
+import { useStorage } from '@plasmohq/storage/hook'
 
 import { PopoverContent } from '~components/popover-content'
 import { uiContext, type UiConfig } from '~components/ui-context'
@@ -43,6 +46,15 @@ const ExportBookCSUI = () => {
   const [uiConfig, setUiConfig] = useImmer<UiConfig>({
     isBatchExportModalOpen: false
   })
+  const [theme] = useStorage(
+    {
+      key: 'theme',
+      instance: new Storage({
+        area: 'local'
+      })
+    },
+    'light'
+  )
 
   const hide = () => {
     setOpen(false)
@@ -87,7 +99,14 @@ const ExportBookCSUI = () => {
   }
 
   return (
-    <ConfigProvider locale={zhCN}>
+    <ConfigProvider
+      locale={zhCN}
+      theme={{
+        algorithm:
+          theme === 'light'
+            ? antdTheme.defaultAlgorithm
+            : antdTheme.darkAlgorithm
+      }}>
       <StyleProvider container={document.getElementById(HOST_ID).shadowRoot}>
         <uiContext.Provider
           value={{

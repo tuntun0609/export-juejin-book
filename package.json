@@ -1,7 +1,7 @@
 {
   "name": "export-juejin-book",
   "displayName": "Export juejin book",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "export juejin book",
   "author": "https://github.com/tuntun0609",
   "scripts": {
